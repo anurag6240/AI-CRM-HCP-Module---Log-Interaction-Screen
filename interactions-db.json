@@ -1,0 +1,17 @@
+[
+  {
+    "hcpName": "Dr. Emily Watson",
+    "interactionType": "Meeting",
+    "date": "2026-07-17",
+    "time": "22:38",
+    "attendees": "None",
+    "topicsDiscussed": "Clinical trial results for Cardiox-9",
+    "materialsShared": "New efficacy brochure",
+    "samplesDistributed": "abc",
+    "sentiment": "Positive",
+    "outcomes": "Dr. Watson agreed to lead a roundtable next month",
+    "followUpActions": "Coordinate roundtable logistics for next month",
+    "id": "log-1784308458314",
+    "createdAt": "2026-07-17T17:14:18.315Z"
+  }
+]

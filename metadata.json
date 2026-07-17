@@ -1,0 +1,6 @@
+{
+  "name": "AI-First CRM HCP Module",
+  "description": "Life Sciences CRM Log Interaction screen with manual entry and an AI assistant that auto-populates structured fields from unstructured conversation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
