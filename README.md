@@ -24,7 +24,7 @@ The project is styled using the **Google Inter** font and uses **Redux** for man
 
 The application has two parallel, interchangeable full-stack configurations:
 
-- 🟢 **Configuration A (Express Node.js Full-Stack)**: React frontend + Node.js Express server running on **Port 3000** (uses Gemini 2.5 Flash).
+- 🟢 **Configuration A (Express Node.js Full-Stack)**: React frontend + Node.js Express server running on **Port 3000** (uses Gemini 1.5 Flash 8B / `gemini-flash-lite-latest`).
 - 🐍 **Configuration B (FastAPI Python Full-Stack)**: React frontend running on **Port 5173** + FastAPI Python backend running on **Port 8000** (uses Groq `gemma2-9b-it` and LangGraph).
 
 ```text
@@ -46,147 +46,127 @@ The application has two parallel, interchangeable full-stack configurations:
 
 ---
 
-# 🚀 How to Run Everything
+# 🚀 How to Run Configuration A (Express Node.js Full-Stack)
 
-## 🟢 Configuration A: Express Node.js Server (Port 3000)
+This is the easiest way to run the entire app (frontend and backend combined) on **Port 3000** using a local JSON file as a database.
 
-This is the easiest way to run the entire app (frontend and backend combined) on **Port 3000**.
-
-### 1️⃣ Install dependencies in the root directory
-
+### 1️⃣ Install Node.js Dependencies
+Open a terminal in the project's root folder (`ai-first-crm-hcp-module`) and run:
 ```bash
 npm install
 ```
 
-### 2️⃣ Set up your environment variables
-
-Create a `.env` file in the root directory and add your Gemini API Key:
-
+### 2️⃣ Configure Environment Variables
+Create a file named `.env` in the root folder (`ai-first-crm-hcp-module`) and add your Gemini API Key:
 ```env
 GEMINI_API_KEY="your_gemini_api_key_here"
 ```
 
-### 3️⃣ Run the development server
-
+### 3️⃣ Start the App
+Start the development server:
 ```bash
 npm run dev
 ```
-
-Open your browser and navigate to **http://localhost:3000**
+Open your browser and navigate to **[http://localhost:3000](http://localhost:3000)** to use the application!
 
 ---
 
-## 🐍 Configuration B: Python FastAPI & React Frontend
+# 🚀 How to Run Configuration B (FastAPI Python Backend & Vite Frontend)
 
-This runs the Python backend with the LangGraph agent and connects a separate React app to it.
+This runs the LangGraph Python backend on **Port 8000** and a React Vite frontend on **Port 5173**.
 
-### 🔹 1. Setup the Python Backend (Port 8000)
+## 🔹 Step 1: Start the Python Backend (Port 8000)
 
-#### 1️⃣ Navigate to the `/backend` directory
-
+### 1️⃣ Open a Terminal and go to the `/backend` folder
 ```bash
 cd backend
 ```
 
-#### 2️⃣ Create and activate a Python virtual environment
-
+### 2️⃣ Create a Python Virtual Environment
+Run the following command to create a virtual environment named `venv`:
 ```bash
 python -m venv venv
-
-# On Windows:
-.\venv\Scripts\activate
-
-# On macOS/Linux:
-source venv/bin/activate
 ```
 
-#### 3️⃣ Install the dependencies
+### 3️⃣ Activate the Virtual Environment
+- **On Windows (PowerShell)**:
+  If PowerShell throws a permission error, run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process` first, then run:
+  ```powershell
+  .\venv\Scripts\activate
+  ```
+- **On Windows (Command Prompt - CMD)**:
+  ```cmd
+  .\venv\Scripts\activate.bat
+  ```
+- **On macOS/Linux**:
+  ```bash
+  source venv/bin/activate
+  ```
 
+Once activated, your terminal prompt will show `(venv)` at the beginning.
+
+### 4️⃣ Install Backend Packages
+Run this command to install all requirements (FastAPI, LangGraph, Groq, etc.):
 ```bash
 pip install -r requirements.txt
 ```
 
-#### 4️⃣ Create a `.env` file in the `/backend` directory
-
+### 5️⃣ Configure Backend Environment Variables
+Create a file named `.env` inside the `backend` folder and add your keys:
 ```env
+DATABASE_URL="sqlite:///local_hcp.db"
 GROQ_API_KEY="your_groq_api_token_here"
-DATABASE_URL="sqlite:///local_hcp.db" # Default SQLite DB file
 ```
+*(You can use the template in `backend/.env.example` as a reference)*.
 
-#### 5️⃣ Start the FastAPI server
-
+### 6️⃣ Run the FastAPI Server
+Start the backend using Uvicorn:
 ```bash
 uvicorn main:app --port 8000 --reload
 ```
-
-The backend API will run at **http://localhost:8000** and Swagger API docs at **http://localhost:8000/docs**
+- The backend will run on **[http://localhost:8000](http://localhost:8000)**.
+- Swagger API Docs will be available at **[http://localhost:8000/docs](http://localhost:8000/docs)**.
 
 ---
 
-### 🔹 2. Setup the React Frontend (Port 5173)
+## 🔹 Step 2: Start the React Frontend (Port 5173)
 
-#### 1️⃣ Navigate to the `/frontend` directory
-
+### 1️⃣ Open a NEW Terminal Window and go to the `/frontend` folder
 ```bash
 cd frontend
 ```
 
-#### 2️⃣ Install dependencies
-
+### 2️⃣ Install Frontend Dependencies
 ```bash
 npm install
 ```
 
-#### 3️⃣ Run the Vite frontend
-
+### 3️⃣ Run the Frontend Development Server
 ```bash
 npm run dev
 ```
-
-Open your browser and navigate to **http://localhost:5173**. It will communicate with the FastAPI server on port **8000**.
+Open your browser and navigate to **[http://localhost:5173](http://localhost:5173)** to run the Python full-stack configuration!
 
 ---
 
 # 🌐 REST API Routes
 
 ## 1️⃣ 📋 Interactions Endpoints
-
 - `GET /api/interactions` : Fetch all logged interactions from the database.
 - `POST /api/interactions` : Log a new interaction record.
-- `PUT /api/interactions/:id` (or `/api/interactions/{log_id}`) : Update an existing interaction record in-place (used when saving edits).
-- `DELETE /api/interactions/:id` (or `/api/interactions/{log_id}`) : Remove an interaction record.
-
----
+- `PUT /api/interactions/:id` : Update an existing interaction record in-place by ID (saves edits).
+- `DELETE /api/interactions/:id` : Remove an interaction record.
 
 ## 2️⃣ 🤖 AI Chat Endpoint
-
-- `POST /api/agent/chat` : Sends the active conversation history, current form fields, and user prompt to parse details and return a structured JSON response.
+- `POST /api/agent/chat` : Processes conversational logs and active form states, returning structured JSON properties.
 
 ---
 
 # 🧩 LangGraph Agent & The 5 Tools
 
-The FastAPI backend runs a **LangGraph StateGraph** that coordinates user prompts through five specialized tools:
-
-## 🛠️ Tool 1: Log Interaction Tool
-Parses raw unstructured text to identify entities (doctor name, attendees, clinical topics, outcomes) and compiles them into a structured JSON payload conforming to the database schema.
-
----
-
-## ✏️ Tool 2: Edit Interaction Tool
-Context-aware editor that compares raw chat inputs alongside existing form states to perform surgical overrides and field updates.
-
----
-
-## 😊 Tool 3: Sentiment Analyzer Tool
-Evaluates the tone and notes, classifying the doctor's sentiment as **Positive**, **Neutral**, or **Negative**.
-
----
-
-## 📦 Tool 4: Material & Sample Locator Tool
-Scans text to identify physical materials distributed (brochures, trial data) and starter drug samples.
-
----
-
-## 📅 Tool 5: Follow-Up Action Generator Tool
-Reviews the meeting outcomes to generate targeted next steps (e.g. scheduling roundtable leaders, coordinating medical inquiries).
+The Python backend compiles a **LangGraph StateGraph** that coordinates user prompts through five specialized tools:
+*   **🛠️ Tool 1: Log Interaction**: Parses unformatted text to extract HCP details (names, dates, topics, outcomes).
+*   **✏️ Tool 2: Edit/Correction**: A context-aware tool that merges natural language corrections with active forms.
+*   **😊 Tool 3: Sentiment Analyzer**: Classifies tone into Positive, Neutral, or Negative.
+*   **📦 Tool 4: Material & Sample Locator**: Scans for shared brochures, trial materials, and drug starter samples.
+*   **📅 Tool 5: Follow-Up Action Generator**: Evaluates outcomes to recommend specific next steps.
